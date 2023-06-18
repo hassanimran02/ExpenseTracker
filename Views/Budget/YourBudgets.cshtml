@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Your Budgets";
+}
+
+<h2 style="margin-top:30px;">Your Budgets</h2>
+
+@if (Model.Count > 0)
+{
+    <form id="budgetSelectionForm" method="post" action="@Url.Action("SetSelectedBudget", "Budget")">
+        @Html.AntiForgeryToken()
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Budget Name</th>
+                        <th>Monthly Income</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Select</th>
+                        <th>Details</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var budget in Model)
+                    {
+                        <tr>
+                            <td>@budget.Name</td>
+                            <td>@budget.MonthlyIncome</td>
+                            <td>@budget.StartDate.ToString("MM/dd/yyyy")</td>
+                            <td>@budget.EndDate.ToString("MM/dd/yyyy")</td>
+                            <td>
+                                <input type="radio" name="SelectedBudgetId" value="@budget.BudgetId" @(Session["SelectedBudgetId"] != null && (int)Session["SelectedBudgetId"] == budget.BudgetId ? "checked" : "")>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "BudgetDetails", new { budgetId = budget.BudgetId }, new { @class = "btn btn-primary btn-sm" })
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "UpdateBudget", new { budgetId = budget.BudgetId }, new { @class = "btn btn-warning btn-sm" })
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteBudget", new { budgetId = budget.BudgetId }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('Are you sure you want to delete this budget?');" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Select Budget</button>
+        </div>
+    </form>
+}
+else
+{
+    <p>No budgets found.</p>
+}
+
+<div class=" mt-4">
+    @Html.ActionLink("Add New Budget", "CreateCustomBudget", null, new { @class = "btn btn-success" })
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            $('#budgetSelectionForm').submit(function () {
+                $('button[type="submit"]', this).attr('disabled', 'disabled');
+            });
+        });
+    </script>
+}

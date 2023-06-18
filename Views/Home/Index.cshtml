@@ -1,0 +1,195 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header class="animate__animated animate__fadeInDown" style="display: flex;justify-content: center;align-items: center;background-color:#ff8489">
+        <nav class="navbar">
+            <div class="logo" style="color: black;">Expense Tracker</div>
+        </nav>
+    </header>
+
+    <section class="hero animate__animated animate__fadeInUp" style="height: 400px;">
+        <div class="hero-content">
+            <h1 style="color: black;">Track Your Expenses Like Never Before</h1>
+            <p style="color: black;">Take control of your finances with our powerful Expense Tracker application.</p>
+            <a href="#" class="cta-button animate__animated animate__fadeInUp">Sign Up Now</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature animate__animated animate__fadeInLeft">
+            <i class="fas fa-wallet"></i>
+            <h2>Manage Your Budget</h2>
+            <p>Easily create and customize budgets to stay on top of your spending.</p>
+        </div>
+        <div class="feature animate__animated animate__fadeInUp">
+            <i class="fas fa-chart-line"></i>
+            <h2>Analyze Your Expenses</h2>
+            <p>Visualize your expenses with interactive charts and insightful reports.</p>
+        </div>
+        <div class="feature animate__animated animate__fadeInRight">
+            <i class="fas fa-mobile-alt"></i>
+            <h2>Access Anywhere</h2>
+            <p>Track your expenses on the go with our mobile-friendly app.</p>
+        </div>
+    </section>
+
+    <footer class="animate__animated animate__fadeInUp">
+        <p>&copy; 2023 Expense Tracker. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Global styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    /* Header styles */
+    header {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-right: auto;
+        color: #333;
+    }
+
+    .nav-links {
+        list-style: none;
+        display: flex;
+    }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+            .nav-links a:hover {
+                color: #ff5a5f;
+            }
+
+    /* Hero section styles */
+    .hero {
+        background-image: url("background.jpg");
+        background-size: cover;
+        background-position: center;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-content {
+        text-align: center;
+        color: #fff;
+    }
+
+    .hero h1 {
+        font-size: 35px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: 15px;
+        margin-bottom: 40px;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background-color: #ff5a5f;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 30px;
+        transition: background-color 0.3s ease;
+    }
+
+        .cta-button:hover {
+            background-color: #ff4247;
+        }
+
+    /* Features section styles */
+    .features {
+        background-color: #fff;
+        padding: 40px 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .feature {
+        text-align: center;
+    }
+
+        .feature i {
+            font-size: 36px;
+            color: #ff5a5f;
+            margin-bottom: 20px;
+        }
+
+        .feature h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .feature p {
+            font-size: 16px;
+            color: #666;
+        }
+
+    /* Footer styles */
+    footer {
+        background-color: #333;
+        padding: 20px;
+        text-align: center;
+        color: #fff;
+        font-size: 14px;
+    }
+</style>

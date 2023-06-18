@@ -1,0 +1,21 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="dashboard-wrapper">
+    <div class="dashboard-content">
+        <h2>Welcome to your Dashboard</h2>
+        <p>Here you can manage your expenses, budgets, generate reports, and gain insights.</p>
+    </div>
+</div>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var dashboardContent = document.querySelector(".dashboard-content");
+            setTimeout(function () {
+                dashboardContent.classList.add("show");
+            }, 100);
+        });
+</script>
+

@@ -1,0 +1,30 @@
+﻿@model ExpenseTracker.Models.Expense
+
+<h2>Delete Expense</h2>
+
+<p>Are you sure you want to delete the following expense?</p>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>@Model.Date.ToShortDateString()</td>
+        <td>@Model.Category</td>
+        <td>@Model.Amount.ToString("C")</td>
+        <td>@Model.Description</td>
+    </tr>
+</table>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-secondary" })
+    </div>
+}

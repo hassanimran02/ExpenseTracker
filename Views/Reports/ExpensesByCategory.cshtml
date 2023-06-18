@@ -1,0 +1,52 @@
+﻿@model List<ExpenseTracker.Models.Expense>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expenses By Category</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 600px; margin: 0 auto;">
+        <canvas id="expensesChart"></canvas>
+    </div>
+
+    <script>
+        var data = @Html.Raw(Json.Encode(Model));
+
+        var categories = data.map(function (expense) {
+            return expense.Category;
+        });
+
+        var amounts = data.map(function (expense) {
+            return expense.Amount;
+        });
+
+        var ctx = document.getElementById('expensesChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: amounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

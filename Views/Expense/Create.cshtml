@@ -1,0 +1,94 @@
+﻿@model ExpenseTracker.Models.Expense
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    h2{
+        margin-top:30px;
+    }
+    .custom-form {
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+        .custom-form .form-group {
+            text-align: left;
+        }
+
+        .custom-form .form-control {
+            width: 100%;
+        }
+
+        .custom-form .btn-save {
+            margin-top: 10px;
+            text-align: center;
+        }
+</style>
+
+<div class="custom-form">
+    <h2>Add New Expense</h2>
+
+    @using (Html.BeginForm("Create", "Expense", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-warning">
+                @Html.ValidationSummary(true)
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date)
+            @Html.TextBoxFor(model => model.Date, new { type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Date)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Category)
+            @Html.DropDownListFor(model => model.Category, (IEnumerable<SelectListItem>)ViewBag.CategoryList, "Select Category", new { id = "categorySelect", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Category)
+        </div>
+
+        <div id="customCategoryContainer" style="display: none;" class="form-group">
+            @Html.Label("Custom Category")
+            @Html.TextBox("customCategory", null, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount)
+            @Html.TextBoxFor(model => model.Amount, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Amount)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description)
+            @Html.TextBoxFor(model => model.Description, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+
+        <div class="form-group btn-save">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    }
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(function () {
+        // Handle change event of category select
+        $("#categorySelect").change(function () {
+            var selectedCategory = $(this).val();
+            var customCategoryContainer = $("#customCategoryContainer");
+
+            if (selectedCategory === "Other") {
+                customCategoryContainer.fadeIn();
+            } else {
+                customCategoryContainer.fadeOut();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,90 @@
+﻿@model List<ExpenseTracker.Models.Expense>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <style>
+        /* Additional styles specific to the Expense view */
+        h2{
+            margin-top:30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+            color: #555;
+        }
+
+        a {
+            color: #ff5a5f;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            a:hover {
+                color: #ff4247;
+            }
+    </style>
+}
+
+<h2>Expenses</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in Model)
+            {
+                <tr>
+                    <td>@expense.Date.ToShortDateString()</td>
+                    <td>@expense.Category</td>
+                    <td>@expense.Amount.ToString("C")</td>
+                    <td>@expense.Description</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Expense", new { id = expense.ExpenseId })">Edit</a> |
+                        <a href="@Url.Action("Delete", "Expense", new { id = expense.ExpenseId })">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No expenses found.</p>
+}
+
+<p>
+    <a href="@Url.Action("Create", "Expense")" class="btn btn-primary">Add New Expense</a>
+</p>

@@ -1,0 +1,23 @@
+﻿@model ExpenseTracker.Models.BudgetSummaryViewModel
+
+@{
+    ViewBag.Title = "Budget Summary";
+}
+
+<h2>Budget Summary</h2>
+
+@if (Model != null)
+{
+    <h3>Budget ID: @Model.BudgetId</h3>
+    <h4>Budget Name: @Model.Name</h4>
+    <p>Total Expenses: @Model.TotalExpenses</p>
+    <p>Total Allocated Amount: @Model.TotalAllocatedAmount</p>
+    <p>Savings: @Model.Savings</p>
+    <p>Overspending: @Model.Overspending</p>
+    <p>Category with Highest Spending: @Model.CategoryWithHighestSpending</p>
+    <p>Day with Highest Spending: @Model.DayWithHighestSpending</p>
+}
+else
+{
+    <p>No budget selected.</p>
+}

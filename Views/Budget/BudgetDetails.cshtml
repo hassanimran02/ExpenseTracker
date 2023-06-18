@@ -1,0 +1,98 @@
+﻿@model ExpenseTracker.Models.Budget
+
+@{
+    ViewBag.Title = "BudgetDetails";
+}
+
+<h2>Budget Details</h2>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<p><strong>Monthly Income:</strong> @Model.MonthlyIncome</p>
+<p><strong>Start Date:</strong> @Model.StartDate.ToString("MM/dd/yyyy")</p>
+<p><strong>End Date:</strong> @Model.EndDate.ToString("MM/dd/yyyy")</p>
+
+<h3 class="mt-4">Budget Categories</h3>
+
+<table class="table mt-2">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Allocated Amount</th>
+            <th>Spent Amount</th>
+            <th>Remaining Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Category</td>
+                <td>@category.AllocatedAmount</td>
+                <td>@category.SpentAmount</td>
+                <td>@category.RemainingAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div style="width: 1300px; height: 700px;">
+    <canvas id="budgetChart" width="400" height="300"></canvas>
+</div>
+@section scripts {
+    <script>
+        var categories = [];
+        var allocatedAmounts = [];
+        var spentAmounts = [];
+
+        // Populate data from the model
+        @foreach (var category in Model.Categories)
+        {
+            @:categories.push("@category.Category");
+            @:allocatedAmounts.push(@category.AllocatedAmount);
+            @:spentAmounts.push(@category.SpentAmount);
+        }
+
+        // Create the combined chart
+        var ctx = document.getElementById('budgetChart').getContext('2d');
+        var budgetChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [
+                    {
+                        label: 'Allocation',
+                        data: allocatedAmounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderWidth: 1,
+                        yAxisID: 'allocation',
+                    },
+                    {
+                        label: 'Spending',
+                        data: spentAmounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderWidth: 1,
+                        yAxisID: 'spending',
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                    allocation: {
+                        type: 'linear',
+                        position: 'left',
+                    },
+                    spending: {
+                        type: 'linear',
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    },
+                },
+            }
+        });
+    </script>
+}

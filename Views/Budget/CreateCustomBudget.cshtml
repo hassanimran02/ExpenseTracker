@@ -1,0 +1,104 @@
+﻿@model ExpenseTracker.Models.CreateCustomBudgetViewModel
+
+@{
+    ViewBag.Title = "Create Custom Budget";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        margin-top:30px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .table th {
+        font-weight: bold;
+    }
+
+    .text-danger {
+        color: #ff5a5f;
+    }
+
+    .btn-primary {
+        background-color: #ff5a5f;
+        border-color: #ff5a5f;
+    }
+
+        .btn-primary:hover {
+            background-color: #ff474c;
+            border-color: #ff474c;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2>Create Custom Budget</h2>
+
+            @using (Html.BeginForm())
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name)
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MonthlyIncome)
+                    @Html.TextBoxFor(model => model.MonthlyIncome, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.MonthlyIncome)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StartDate)
+                    @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EndDate)
+                    @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+
+                <h4>Budget Categories</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Allocation Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Categories.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.HiddenFor(m => m.Categories[i].Category)
+                                    @Model.Categories[i].Category
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(m => m.Categories[i].AllocatedPercentage, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Categories[i].AllocatedPercentage)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <center><button type="submit" class="btn btn-primary">Create Budget</button></center>
+            }
+        </div>
+    </div>
+</div>

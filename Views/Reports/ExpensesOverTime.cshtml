@@ -1,0 +1,55 @@
+﻿@model List<ExpenseTracker.Models.Expense>
+@using Newtonsoft.Json
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expenses Over Time</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 600px; margin: 0 auto;">
+        <canvas id="expensesChart"></canvas>
+    </div>
+
+    <script>
+        var data = @Html.Raw(JsonConvert.SerializeObject(Model));
+
+        var labels = data.map(function (item) {
+            // Format the date based on your requirement
+            // Here, we are formatting it as "MMM YYYY" (e.g., Jan 2023)
+            var formattedDate = new Date(item.Date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            return formattedDate;
+        });
+
+        var amounts = data.map(function (item) {
+            return item.Amount;
+        });
+
+        var ctx = document.getElementById('expensesChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: amounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

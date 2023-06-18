@@ -1,0 +1,38 @@
+﻿@model ExpenseTracker.Models.Expense
+
+<h2>Edit Expense</h2>
+
+@using (Html.BeginForm("Edit", "Expense", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.ExpenseId)
+
+    <div>
+        @Html.LabelFor(model => model.Date)
+        @Html.TextBoxFor(model => model.Date, new { type = "date" })
+        @Html.ValidationMessageFor(model => model.Date)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Category)
+        @Html.TextBoxFor(model => model.Category)
+        @Html.ValidationMessageFor(model => model.Category)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Amount)
+        @Html.TextBoxFor(model => model.Amount)
+        @Html.ValidationMessageFor(model => model.Amount)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Description)
+        @Html.TextBoxFor(model => model.Description)
+        @Html.ValidationMessageFor(model => model.Description)
+    </div>
+
+    <div>
+        <input type="submit" value="Save" />
+    </div>
+}
