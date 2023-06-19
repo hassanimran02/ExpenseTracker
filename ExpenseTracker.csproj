@@ -161,9 +161,11 @@
     <Compile Include="Models\CategoryExpense.cs" />
     <Compile Include="Models\CreateCustomBudgetViewModel.cs" />
     <Compile Include="Models\Expense.cs" />
+    <Compile Include="Models\ExpensesSummaryViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserDashboardViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +217,7 @@
     <Content Include="Views\Budget\YourBudgets.cshtml" />
     <Content Include="Views\Budget\UpdateBudget.cshtml" />
     <Content Include="Views\Account\UserDashboard.cshtml" />
+    <Content Include="Views\Reports\ExpensesSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,106 @@
+﻿@model ExpenseTracker.Models.ExpensesSummaryViewModel
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Expenses Summary";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expenses Summary</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Expense by Category</h2>
+    <div style="width: 600px; margin: 0 auto;">
+        <canvas id="expensesByCategoryChart"></canvas>
+    </div>
+
+    <h2>Expense Over Time</h2>
+    <div style="width: 600px; margin: 0 auto;">
+        <canvas id="expensesOverTimeChart"></canvas>
+    </div>
+
+    <script>
+        var expensesByCategoryData = @Html.Raw(JsonConvert.SerializeObject(Model.ExpensesByCategory));
+        var expensesOverTimeData = @Html.Raw(JsonConvert.SerializeObject(Model.ExpensesOverTime));
+
+        var expensesByCategoryLabels = expensesByCategoryData.map(function (item) {
+            return item.Category;
+        });
+
+        var expensesByCategoryAmounts = expensesByCategoryData.map(function (item) {
+            return item.Amount;
+        });
+
+        var expensesOverTimeLabels = expensesOverTimeData.map(function (item) {
+            return item.Date;
+        });
+
+        var expensesOverTimeAmounts = expensesOverTimeData.map(function (item) {
+            return item.Amount;
+        });
+
+        var expensesByCategoryCtx = document.getElementById('expensesByCategoryChart').getContext('2d');
+        var expensesByCategoryChart = new Chart(expensesByCategoryCtx, {
+            type: 'bar',
+            data: {
+                labels: expensesByCategoryLabels,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: expensesByCategoryAmounts,
+                    backgroundColor: getRandomColors(expensesByCategoryData.length),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var expensesOverTimeCtx = document.getElementById('expensesOverTimeChart').getContext('2d');
+        var expensesOverTimeChart = new Chart(expensesOverTimeCtx, {
+            type: 'line',
+            data: {
+                labels: expensesOverTimeLabels,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: expensesOverTimeAmounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function getRandomColors(count) {
+            var colors = [];
+            for (var i = 0; i < count; i++) {
+                var color = getRandomColor();
+                colors.push(color);
+            }
+            return colors;
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+</body>
+</html>

@@ -1,21 +1,191 @@
-﻿
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Dashboard";
+﻿@using Newtonsoft.Json
+@model ExpenseTracker.Models.UserDashboardViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS styles */
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+            .fade-in.show {
+                opacity: 1;
+            }
+
+        /* Smooth Font */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Color Palette */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Table Styles */
+        .table {
+            border: none;
+            transition: box-shadow 0.3s ease-in-out;
+            margin-bottom: 0;
+        }
+
+            .table th,
+            .table td {
+                border-top: none;
+            }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table-responsive {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Chart Styles */
+        #expenseChart {
+            height: 450px;
+        }
+
+        .chart-container {
+            height: 400px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4 fade-in">
+                    <div class="card-body">
+                        <h5 class="card-title">Expense Breakdown</h5>
+                        <div class="chart-container">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                        @if (Model.TopExpenseDay != null)
+                        {
+                            <div class="mt-4">
+                                <p><strong>Top Expense Day in last 7 days:</strong> @Model.TopExpenseDay</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4 fade-in">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent Expenses</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var expense in Model.RecentExpenses)
+                                    {
+                                        <tr>
+                                            <td>@expense.Date.ToString("yyyy-MM-dd")</td>
+                                            <td>@expense.Category</td>
+                                            <td>@expense.Amount.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get the expense breakdown data from the model
+       var expenseBreakdown = @Html.Raw(JsonConvert.SerializeObject(Model.ExpenseBreakdown));
+
+// Create an array of random colors for the expenses
+var expenseColors = generateRandomColors(Object.keys(expenseBreakdown).length);
+
+// Function to generate an array of random colors
+function generateRandomColors(count) {
+  var colors = [];
+  for (var i = 0; i < count; i++) {
+    var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    colors.push(color);
+  }
+  return colors;
 }
 
-<div class="dashboard-wrapper">
-    <div class="dashboard-content">
-        <h2>Welcome to your Dashboard</h2>
-        <p>Here you can manage your expenses, budgets, generate reports, and gain insights.</p>
-    </div>
-</div>
-<script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var dashboardContent = document.querySelector(".dashboard-content");
-            setTimeout(function () {
-                dashboardContent.classList.add("show");
-            }, 100);
-        });
-</script>
+// Create the expense chart using Chart.js
+var ctx = document.getElementById('expenseChart').getContext('2d');
+var expenseChart = new Chart(ctx, {
+  type: 'pie',
+  data: {
+    labels: Object.keys(expenseBreakdown),
+    datasets: [{
+      data: Object.values(expenseBreakdown),
+      backgroundColor: expenseColors,
+      borderWidth: 0
+    }]
+  },
+  options: {
+    legend: {
+      position: 'right'
+    }
+  }
+});
 
+        // Add fade-in animation class to elements
+        var elementsToShow = document.querySelectorAll('.fade-in');
+        var scrollHandler = function () {
+            for (var i = 0; i < elementsToShow.length; i++) {
+                var element = elementsToShow[i];
+                if (isElementInViewport(element)) {
+                    element.classList.add('show');
+                }
+            }
+        };
+
+        var isElementInViewport = function (el) {
+            var rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        };
+
+        window.addEventListener('scroll', scrollHandler);
+        window.addEventListener('load', scrollHandler);
+    </script>
+</body>
+</html>

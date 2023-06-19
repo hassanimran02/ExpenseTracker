@@ -36,21 +36,29 @@ namespace ExpenseTracker.Controllers
         public ActionResult CreateCustomBudget()
         {
             var userId = (int)Session["UserId"];
-            var categories = _dbContext.Expenses
+
+            // Fetch categories from the Expense table
+            var expenseCategories = _dbContext.Expenses
                 .Where(e => e.UserId == userId)
                 .Select(e => e.Category)
                 .Distinct()
                 .ToList();
 
+            // Fetch categories from the ExpenseCategoryHelper
+            var predefinedCategories = ExpenseCategoryHelper.GetExpenseCategories();
+
+            // Merge the two sets of categories
+            var allCategories = expenseCategories.Union(predefinedCategories.Select(c => c.Value)).Distinct().ToList();
+
             var model = new CreateCustomBudgetViewModel
             {
-                Categories = categories.Select(c => new BudgetCategoryViewModel
+                Categories = allCategories.Select(c => new BudgetCategoryViewModel
                 {
                     Category = c,
                     AllocatedPercentage = 0.0m // Set initial allocation percentage to 0
                 }).ToList(),
+                CategoryList = predefinedCategories // Use the predefined categories as the CategoryList
             };
-            model.CategoryList = ExpenseCategoryHelper.GetExpenseCategories();
 
             return View(model);
         }
@@ -102,23 +110,17 @@ namespace ExpenseTracker.Controllers
             return View(model);
         }
 
-        public ActionResult BudgetSummary(int? budgetId)
+        public ActionResult BudgetSummary()
         {
             var userId = (int)Session["UserId"];
             var budgets = _dbContext.Budgets.Where(b => b.UserId == userId).ToList();
 
-            if (budgetId.HasValue)
+            var budgetSummaryModels = new List<BudgetSummaryViewModel>();
+
+            foreach (var budget in budgets)
             {
-                var budget = budgets.FirstOrDefault(b => b.BudgetId == budgetId);
-
-                if (budget == null)
-                {
-                    // Redirect to the default budget summary if the selected budget does not exist
-                    return RedirectToAction("BudgetSummary");
-                }
-
                 var expenses = _dbContext.Expenses
-                    .Where(e => e.UserId == userId && e.Date >= budget.StartDate && e.Date <= budget.EndDate)
+                    .Where(e => e.UserId == userId && e.BudgetId == budget.BudgetId) // Filter expenses by budget ID
                     .ToList();
 
                 decimal totalExpenses = expenses.Sum(e => e.Amount);
@@ -148,10 +150,10 @@ namespace ExpenseTracker.Controllers
                     DayWithHighestSpending = dayWithHighestSpending
                 };
 
-                return View(budgetSummaryModel);
+                budgetSummaryModels.Add(budgetSummaryModel);
             }
 
-            return View(budgets);
+            return View(budgetSummaryModels);
         }
 
         public ActionResult YourBudgets()

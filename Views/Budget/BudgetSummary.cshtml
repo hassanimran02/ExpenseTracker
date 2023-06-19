@@ -1,23 +1,173 @@
-﻿@model ExpenseTracker.Models.BudgetSummaryViewModel
+﻿@model List<ExpenseTracker.Models.BudgetSummaryViewModel>
 
 @{
     ViewBag.Title = "Budget Summary";
 }
 
-<h2>Budget Summary</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Budget Summary</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS styles */
 
-@if (Model != null)
-{
-    <h3>Budget ID: @Model.BudgetId</h3>
-    <h4>Budget Name: @Model.Name</h4>
-    <p>Total Expenses: @Model.TotalExpenses</p>
-    <p>Total Allocated Amount: @Model.TotalAllocatedAmount</p>
-    <p>Savings: @Model.Savings</p>
-    <p>Overspending: @Model.Overspending</p>
-    <p>Category with Highest Spending: @Model.CategoryWithHighestSpending</p>
-    <p>Day with Highest Spending: @Model.DayWithHighestSpending</p>
-}
-else
-{
-    <p>No budget selected.</p>
-}
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+            .fade-in.show {
+                opacity: 1;
+            }
+
+        /* Smooth Font */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Color Palette */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Chart Styles */
+        .chart-container {
+            height: 400px;
+            margin-bottom: 30px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4">Budget Summary</h2>
+
+        @if (Model.Count > 0)
+        {
+            foreach (var budgetSummaryModel in Model)
+            {
+                <div class="card mb-4 fade-in">
+                    <div class="card-body">
+                        <h4 class="mb-4">Budget Name: @budgetSummaryModel.Name</h4>
+                        <p><strong>Total Expenses:</strong> @budgetSummaryModel.TotalExpenses</p>
+                        <p><strong>Total Allocated Amount:</strong> @budgetSummaryModel.TotalAllocatedAmount</p>
+                        <p><strong>Savings:</strong> @budgetSummaryModel.Savings</p>
+                        <p><strong>Overspending:</strong> @budgetSummaryModel.Overspending</p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Expense Breakdown</h5>
+                        <div class="chart-container">
+                            <canvas id="expenseChart-@budgetSummaryModel.BudgetId"></canvas>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="card mb-4 fade-in">
+                <div class="card-body">
+                    <p>No budgets available.</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.Count > 0)
+    {
+        foreach (var budgetSummaryModel in Model)
+        {
+            <script>
+                // Chart.js configuration for expense breakdown chart - Budget Id: @budgetSummaryModel.BudgetId
+                var expenseBreakdown_@budgetSummaryModel.BudgetId = {
+                    'Total Expenses': @budgetSummaryModel.TotalExpenses,
+                    'Total Allocated Amount': @budgetSummaryModel.TotalAllocatedAmount,
+                    'Savings': @budgetSummaryModel.Savings,
+                    'Overspending': @budgetSummaryModel.Overspending
+                };
+
+                var ctx_@budgetSummaryModel.BudgetId = document.getElementById('expenseChart-@budgetSummaryModel.BudgetId').getContext('2d');
+                var expenseChart_@budgetSummaryModel.BudgetId = new Chart(ctx_@budgetSummaryModel.BudgetId, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(expenseBreakdown_@budgetSummaryModel.BudgetId),
+                        datasets: [{
+                            label: 'Amount',
+                            data: Object.values(expenseBreakdown_@budgetSummaryModel.BudgetId),
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(255, 99, 132, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        if (Number.isInteger(value)) {
+                                            return value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        }
+    }
+
+    <script>
+        // Animate the elements on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            var elements = document.querySelectorAll('.fade-in');
+            var windowHeight = window.innerHeight;
+
+            function checkPosition() {
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    var positionFromTop = elements[i].getBoundingClientRect().top;
+
+                    if (positionFromTop - windowHeight <= 0) {
+                        element.classList.add('show');
+                    }
+                }
+            }
+
+            checkPosition();
+            window.addEventListener('scroll', checkPosition);
+        });
+    </script>
+</body>
+</html>

@@ -11,6 +11,8 @@ namespace ExpenseTracker.Models
         public string Name { get; set; }
         public decimal TotalExpenses { get; set; }
         public decimal TotalAllocatedAmount { get; set; }
+        public decimal RemainingBudget { get; set; }
+        public decimal BudgetSpentPercentage { get; set; }
         public decimal Savings { get; set; }
         public decimal Overspending { get; set; }
         public string CategoryWithHighestSpending { get; set; }

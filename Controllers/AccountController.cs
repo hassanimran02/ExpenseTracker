@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -94,7 +95,7 @@ namespace ExpenseTracker.Controllers
                     // Set an authentication cookie or session variable to indicate that the user is logged in
                     Session["UserId"] = user.UserId;
 
-                    return RedirectToAction("Index", "Reports");
+                    return RedirectToAction("UserDashboard", "Account");
                 }
 
                 // Invalid username or password
@@ -122,7 +123,63 @@ namespace ExpenseTracker.Controllers
 
         public ActionResult UserDashboard()
         {
-            return View();
+            // Retrieve the current user's ID
+            var userId = (int)Session["UserId"];
+
+            // Retrieve the current budget for the user
+            var currentBudget = _dbContext.Budgets
+                .FirstOrDefault(b => b.UserId == userId);
+
+            // Retrieve the top expense day in the last week
+            var dateThreshold = DateTime.Now.AddDays(-7);
+            var topExpenseDay = _dbContext.Expenses
+                .Where(e => e.UserId == userId && e.Date >= dateThreshold)
+                .GroupBy(e => DbFunctions.TruncateTime(e.Date))
+                .Select(g => new { Date = g.Key, TotalAmount = g.Sum(e => e.Amount) })
+                .OrderByDescending(g => g.TotalAmount)
+                .FirstOrDefault();
+
+            DateTime? topExpenseDate = topExpenseDay?.Date;
+
+            // Retrieve the most recent expenses
+            var recentExpenses = _dbContext.Expenses
+                .Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.Date)
+                .Take(5)
+                .ToList();
+
+            // Calculate budget summary
+            var totalExpenses = _dbContext.Expenses
+                .Where(e => e.UserId == userId && e.BudgetId == currentBudget.BudgetId)
+                .Sum(e => e.Amount);
+            var remainingBudget = currentBudget.MonthlyIncome - totalExpenses;
+            var budgetSpentPercentage = (totalExpenses / currentBudget.MonthlyIncome) * 100;
+
+            var expenseBreakdown = _dbContext.Expenses
+                .Where(e => e.UserId == userId && e.BudgetId == currentBudget.BudgetId)
+                .GroupBy(e => e.Category)
+                .Select(g => new { Label = g.Key, Amount = g.Sum(e => e.Amount) })
+                .ToDictionary(e => e.Label, e => e.Amount);
+
+            var viewModel = new UserDashboardViewModel
+            {
+                CurrentBudget = currentBudget,
+                BudgetSummary = new BudgetSummaryViewModel
+                {
+                    RemainingBudget = remainingBudget,
+                    BudgetSpentPercentage = budgetSpentPercentage
+                },
+                RecentExpenses = recentExpenses,
+                TopExpenseDay = topExpenseDate?.ToString("yyyy-MM-dd"),
+                RemainingBudget = remainingBudget,
+                BudgetSpentPercentage = budgetSpentPercentage,
+                ExpenseBreakdown = expenseBreakdown,
+                BudgetName = currentBudget.Name,
+                TotalExpenses = totalExpenses
+            };
+
+            return View(viewModel);
         }
+
     }
 }

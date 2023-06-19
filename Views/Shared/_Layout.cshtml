@@ -1,6 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
+@{
+    var currentBudgetId = (int?)Session["CurrentBudgetId"];
+    ViewBag.CurrentBudgetId = currentBudgetId;
+}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -91,16 +94,19 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Manage Expenses</a>
+                        <a class="nav-link" href="@Url.Action("UserDashboard", "Account")">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Manage Budgets</a>
+                        <a class="nav-link" href="@Url.Action("Index", "Expense")">Manage Expenses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Reports and Analytics</a>
+                        <a class="nav-link" href="@Url.Action("YourBudgets", "Budget")">Manage Budgets</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Insights</a>
+                        <a class="nav-link" href="@Url.Action("ExpensesSummary", "Reports")">Reports and Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                       <a class="nav-link" href="@Url.Action("BudgetSummary", "Budget")">Insights</a>
                     </li>
                 </ul>
             </div>
