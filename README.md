@@ -12,3 +12,29 @@ The Expense Tracker project aims to provide users with a convenient way to track
 Overall, the project successfully provides users with a personal expense tracking and budgeting solution, helping them monitor their expenses, analyze spending patterns, and stay within their budget limits.
 ## Screenshots
 ![Alt Text](UserInterfaceScreenshots/1.JPG)
+
+![Alt Text](UserInterfaceScreenshots/2.JPG)
+
+![Alt Text](UserInterfaceScreenshots/3.JPG)
+
+![Alt Text](UserInterfaceScreenshots/4.JPG)
+
+![Alt Text](UserInterfaceScreenshots/5.JPG)
+
+![Alt Text](UserInterfaceScreenshots/6.JPG)
+
+![Alt Text](UserInterfaceScreenshots/7.JPG)
+
+![Alt Text](UserInterfaceScreenshots/8.JPG)
+
+![Alt Text](UserInterfaceScreenshots/9.JPG)
+
+![Alt Text](UserInterfaceScreenshots/10.JPG)
+
+![Alt Text](UserInterfaceScreenshots/11.JPG)
+
+![Alt Text](UserInterfaceScreenshots/12.JPG)
+
+![Alt Text](UserInterfaceScreenshots/13.JPG)
+
+![Alt Text](UserInterfaceScreenshots/14.JPG)
